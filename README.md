@@ -1,2 +1,2 @@
 # WSU-Graduate-School
-Contains all analysis files and information related to the Salesforce Data Infrastructure
+This repository contains all analysis files, variable information, and codebooks related to the Salesforce Data Infrastructure.
