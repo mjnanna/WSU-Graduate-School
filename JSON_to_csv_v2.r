@@ -8,7 +8,7 @@ library(jsonlite)
 ##if this is not the same for you, you will need to change the path to
 ##represent the correct location
 
-JsonIn <- fromJSON("JSON_to_csv_v2.r")
+JsonIn <- fromJSON("all_phd_1.json")
 
 
 
