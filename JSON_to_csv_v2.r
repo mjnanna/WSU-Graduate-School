@@ -8,8 +8,7 @@ library(jsonlite)
 ##if this is not the same for you, you will need to change the path to
 ##represent the correct location
 
-JsonIn <- fromJSON("all_phd_1.json")
-
+JsonIn <- fromJSON("all_phd_8.json")
 
 
 ########################
@@ -37,12 +36,13 @@ JsonIn <- fromJSON("all_phd_1.json")
 			
 		#find the access_id that corresponds to the row of the data frame that has cohort information	
 			access_id <- JsonIn[i,5][[12]]
+			last_name <- JsonIn[i,5][[2]]
 		
 		#repeat access_id for as many rows as present in cohort data.frame. this should be just 1	
 			access_id2 <- rep(access_id, nrow(cohort_df))
-			
+			last_name2 <- rep(last_name, nrow(cohort_df))
 		#add access_id to the front of cohort data.frame	
-			cohort_id <- cbind(access_id2, cohort_df)
+			cohort_id <- cbind(access_id2, last_name2, cohort_df)
 			
 		#build a data frame that has each student with cohort information	
 			cohort_id_df <- rbind(cohort_id_df,cohort_id)
@@ -60,8 +60,10 @@ JsonIn <- fromJSON("all_phd_1.json")
 			if(nrow(JsonIn[[2]][[i]]) != 0){
 				contact_df <- JsonIn[[2]][[i]]
 				access_id <- JsonIn[i,5][[12]]
+				last_name <- JsonIn[i,5][[2]]
 				access_id2 <- rep(access_id, nrow(contact_df))
-				contact_id <- cbind(access_id2, contact_df)
+				last_name2 <- rep(last_name, nrow(contact_df))
+				contact_id <- cbind(access_id2, last_name2, contact_df)
 				contact_id_df <- rbind(contact_id_df,contact_id)
 			}
 		}
@@ -72,8 +74,10 @@ JsonIn <- fromJSON("all_phd_1.json")
 		if(nrow(JsonIn[[3]][[i]]) != 0){
 			phd_df <- JsonIn[[3]][[i]]
 			access_id <- JsonIn[i,5][[12]]
+			last_name <- JsonIn[i,5][[2]]
 			access_id2 <- rep(access_id, nrow(phd_df))
-			phd_id <- cbind(access_id2, phd_df)
+			last_name2 <- rep(last_name, nrow(phd_df))
+			phd_id <- cbind(access_id2, last_name2, phd_df)
 			phd_id_df <- rbind(phd_id_df,phd_id)
 		}
 	}
@@ -84,8 +88,10 @@ JsonIn <- fromJSON("all_phd_1.json")
 		if(nrow(JsonIn[[6]][[i]]) != 0){
 			visas_df <- JsonIn[[6]][[i]]
 			access_id <- JsonIn[i,5][[12]]
+			last_name <- JsonIn[i,5][[2]]
 			access_id2 <- rep(access_id, nrow(visas_df))
-			visas_id <- cbind(access_id2, visas_df)
+			last_name2 <- rep(last_name, nrow(visas_df))
+			visas_id <- cbind(access_id2, last_name2, visas_df)
 			visas_id_df <- rbind(visas_id_df,visas_id)
 		}
 	}
@@ -97,36 +103,46 @@ JsonIn <- fromJSON("all_phd_1.json")
 			#for this i've ommitted the comment section
 			qualifyingPaper_df <- JsonIn[[7]][[i]][,-2]
 			access_id <- JsonIn[i,5][[12]]
+			last_name <- JsonIn[i,5][[2]]
 			access_id2 <- rep(access_id, nrow(qualifyingPaper_df))
-			qualifyingPaper_id <- cbind(access_id2, qualifyingPaper_df)
+			last_name2 <- rep(last_name, nrow(qualifyingPaper_df))
+			qualifyingPaper_id <- cbind(access_id2, last_name2, qualifyingPaper_df)
 			qualifyingPaper_id_df <- rbind(qualifyingPaper_id_df,qualifyingPaper_id)
 		}
 	}
 
 	course_id_df <- NULL
-	for(i in 1:nrow(test_df2)) {
+	for(i in 1:nrow(JsonIn)) {
 		
-		if(nrow(test_df2[[8]][[i]]) != 0){
-			course_df <- test_df2[[8]][[i]]
-			access_id <- test_df2[i,5][[12]]
+		if(nrow(JsonIn[[8]][[i]]) != 0){
+			course_df <- JsonIn[[8]][[i]]
+			access_id <- JsonIn[i,5][[12]]
+			last_name <- JsonIn[i,5][[2]]
 			access_id2 <- rep(access_id, nrow(course_df))
-			course_id <- cbind(access_id2, course_df)
+			last_name2 <- rep(last_name, nrow(course_df))
+			course_id <- cbind(access_id2, last_name2, course_df)
 			course_id_df <- rbind(course_id_df,course_id)
 		}
 	}
 	
 ##since field of study and biographical information are objects not arrays they can be pulled out directly	
 	
-	field_biograph_df <- JsonIn[[c(4,5)]]
+	field_df <- JsonIn[,4]
+	biograph_df <- JsonIn[,5]
+	field_biograph_df <- cbind(field_df,biograph_df)
 	
 	
-	
-	
-##any of the resulting data frames can be made into a csv using 	
+##becuase some of the variables in some of the csvs contain commas, i've made "|" the separator
+##which requires one additional step in Excel 
+ 	
 
-write.table(visas_id_df,file= "JSON_visas.csv",na="",sep=",", row.names=FALSE,col.names=TRUE,quote=FALSE)
-
-
+write.table(cohort_id_df,file= "JSON_cohort_phd_8.txt",na="",sep="|", row.names=FALSE,col.names=TRUE,quote=FALSE)
+write.table(contact_id_df,file= "JSON_contact_phd_8.txt",na="",sep="|", row.names=FALSE,col.names=TRUE,quote=FALSE)
+write.table(phd_id_df,file= "JSON_phd_phd_8.txt",na="",sep="|", row.names=FALSE,col.names=TRUE,quote=FALSE)
+write.table(visas_id_df,file= "JSON_visas_phd_8.txt",na="",sep="|", row.names=FALSE,col.names=TRUE,quote=FALSE)
+write.table(qualifyingPaper_id_df,file= "JSON_qualifyingPaper_phd_8.txt",na="",sep="|", row.names=FALSE,col.names=TRUE,quote=FALSE)
+write.table(course_id_df,file= "JSON_course_phd_8.txt",na="",sep="|", row.names=FALSE,col.names=TRUE,quote=FALSE)
+write.table(field_biograph_df,file= "JSON_field_biograph_phd_8.txt",na="",sep="|", row.names=FALSE,col.names=TRUE,quote=FALSE)
 
 
 
