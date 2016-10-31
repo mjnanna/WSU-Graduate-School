@@ -1,3 +1,4 @@
+###Current changes saved on October 31, 2016.
 ###The following code requires the package jsonlite. Additionally dplyr would be useful to 
 ### manipulate the data frames futher if one master dataframe is the desired output.
 
